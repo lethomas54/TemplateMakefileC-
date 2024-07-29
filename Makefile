@@ -31,13 +31,6 @@ INCPATH		:=
 INCS		:=	$(addprefix $(INCPATH), $(INC))
 
 ########################################################################################
-#-----------------------------------LIB_VAR--------------------------------------------#
-########################################################################################
-
-LIBPATH 	:=
-LIBNAME 	:=
-
-########################################################################################
 #-----------------------------------COLOR_VAR------------------------------------------#
 ########################################################################################
 
@@ -53,23 +46,18 @@ WHITE 		:=	\033[0;0m
 
 all: $(NAME)
 
-$(NAME): $(LIBNAME) $(OBJ)
-	@$(COMP) $(CFLAGS) $(OBJ) -o $@ -L $(LIBPATH)
+$(NAME): $(OBJ)
+	@$(COMP) $(CFLAGS) $(OBJ) -o $@
 	@echo "$(BLUE_BOLD)$(NAME) compilation: $(GREEN)OK$(WHITE)"
-
-$(LIBNAME):
-	@make -C $(LIBPATH) all
 
 %.o: %.cpp $(INCS)
 	@$(COMP) $(CFLAGS) -c $< -o $@
 
 clean:
-	@make -C $(LIBPATH) clean
 	@rm -f $(OBJ)
 	@echo "$(RED_BOLD)$(NAME) clean: $(GREEN)OK$(WHITE)"
 
 fclean:
-	@make -C $(LIBPATH) fclean
 	@rm -f $(OBJ) $(NAME)
 	@echo "$(RED_BOLD)$(NAME) fclean: $(GREEN)OK$(WHITE)"
 
