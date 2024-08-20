@@ -9,26 +9,18 @@ NAME		:=
 ########################################################################################
 
 COMP		:=	c++
-CFLAGS		:=	-Wall -Wextra -Werror -pedantic -std=c++98
+CFLAGS		:=	-Wall -Wextra -Werror -MMD -MP -pedantic -std=c++98
 
 ########################################################################################
-#------------------------------SOURCE+OBJECT_FILE--------------------------------------#
+#------------------------SOURCE+OBJECT+DEPENDANCE_FILE---------------------------------#
 ########################################################################################
 
 SRC			:=
 
-SRCPATH		:=	./
+SRCPATH		:=	./srcs/
 SRCS		:=	$(addprefix $(SRCPATH), $(SRC))
-OBJ 		:=	$(SRCS:.cpp=.o)
-
-########################################################################################
-#---------------------------------HEADER_FILE------------------------------------------#
-########################################################################################
-
-INC			:=
-
-INCPATH		:=	./
-INCS		:=	$(addprefix $(INCPATH), $(INC))
+OBJS 		:=	$(SRCS:.cpp=.o)
+DEPS		:=	$(OBJS:.o=.d)
 
 ########################################################################################
 #-----------------------------------COLOR_VAR------------------------------------------#
@@ -46,19 +38,20 @@ WHITE 		:=	\033[0;0m
 
 all: $(NAME)
 
-$(NAME): $(OBJ)
-	@$(COMP) $(CFLAGS) $(OBJ) -o $@
+$(NAME): $(OBJS)
+	@$(COMP) $(CFLAGS) $(OBJS) -o $@
 	@echo "$(BLUE_BOLD)$(NAME) compilation: $(GREEN)OK$(WHITE)"
 
-%.o: %.cpp $(INCS)
+-include $(DEPS)
+%.o: %.cpp
 	@$(COMP) $(CFLAGS) -c $< -o $@
 
 clean:
-	@rm -f $(OBJ)
+	@rm -f $(OBJS) $(DEPS)
 	@echo "$(RED_BOLD)$(NAME) clean: $(GREEN)OK$(WHITE)"
 
 fclean:
-	@rm -f $(OBJ) $(NAME)
+	@rm -f $(OBJS) $(DEPS) $(NAME)
 	@echo "$(RED_BOLD)$(NAME) fclean: $(GREEN)OK$(WHITE)"
 
 re: fclean all
