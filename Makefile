@@ -10,6 +10,7 @@ NAME		:=
 
 COMP		:=	c++
 CFLAGS		:=	-Wall -Wextra -Werror -MMD -MP -pedantic -std=c++98
+LDFLAGS		:=
 
 ########################################################################################
 #------------------------SOURCE+OBJECT+DEPENDANCE_FILE---------------------------------#
@@ -39,7 +40,7 @@ WHITE 		:=	\033[0;0m
 all: $(NAME)
 
 $(NAME): $(OBJS)
-	@$(COMP) $(CFLAGS) $(OBJS) -o $@
+	@$(COMP) $(LDFLAGS) $(OBJS) -o $@
 	@echo "$(BLUE_BOLD)$(NAME) compilation: $(GREEN)OK$(WHITE)"
 
 -include $(DEPS)
@@ -56,4 +57,7 @@ fclean:
 
 re: fclean all
 
-.PHONY: all clean fclean re
+run: $(NAME)
+	./$(NAME) $(ARGS)
+
+.PHONY: all clean fclean re run
