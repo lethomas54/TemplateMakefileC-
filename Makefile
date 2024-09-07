@@ -9,7 +9,20 @@ NAME		:=
 ########################################################################################
 
 COMP		:=	c++
-CFLAGS		:=	-Wall -Wextra -Werror -MMD -MP -pedantic -std=c++98
+CFLAGS		:=	-Wall -Wextra -Wuninitialized -Wshadow -Werror -MMD -MP \
+				-pedantic -std=c++98
+LFLAGS		:=
+
+ifdef DEBUG
+    CFLAGS += -DDEBUG
+    ifeq ($(DEBUG), sanitize)
+        CFLAGS += -O0 -fsanitize=address -g
+        LFLAGS += -O0 -fsanitize=address -g
+    endif
+    ifeq ($(DEBUG), leaks)
+        CFLAGS += -DLEAKS
+    endif
+endif
 
 ########################################################################################
 #------------------------SOURCE+OBJECT+DEPENDANCE_FILE---------------------------------#
@@ -56,4 +69,7 @@ fclean:
 
 re: fclean all
 
-.PHONY: all clean fclean re
+run: $(NAME)
+	@./$(NAME) $(ARG)
+
+.PHONY: all clean fclean re run
