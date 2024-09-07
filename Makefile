@@ -9,8 +9,8 @@ NAME		:=
 ########################################################################################
 
 COMP		:=	c++
-CFLAGS		:=	-Wall -Wextra -Wuninitialized -Wshadow -Werror -MMD -MP \
-				-pedantic -std=c++98
+CFLAGS		:=	-Wall -Wextra -Wuninitialized -Wshadow -Werror -MMD -MP -pedantic \
+				-std=c++98
 LFLAGS		:=
 
 ifdef DEBUG
@@ -30,8 +30,9 @@ endif
 
 SRC			:=
 
-SRCPATH		:=	./srcs/
-SRCS		:=	$(addprefix $(SRCPATH), $(SRC))
+SRC_PATH	:=	./srcs/
+INC_PATH	:=	./includes/
+SRCS		:=	$(addprefix $(SRC_PATH), $(SRC))
 OBJS 		:=	$(SRCS:.cpp=.o)
 DEPS		:=	$(OBJS:.o=.d)
 
@@ -57,7 +58,7 @@ $(NAME): $(OBJS)
 
 -include $(DEPS)
 %.o: %.cpp
-	@$(COMP) $(CFLAGS) -c $< -o $@
+	@$(COMP) $(CFLAGS) -I $(INC_PATH) -c $< -o $@
 
 clean:
 	@rm -f $(OBJS) $(DEPS)
