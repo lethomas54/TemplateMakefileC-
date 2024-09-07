@@ -30,10 +30,11 @@ endif
 
 SRC			:=
 
-SRC_PATH	:=	./srcs/
-INC_PATH	:=	./includes/
-SRCS		:=	$(addprefix $(SRC_PATH), $(SRC))
-OBJS 		:=	$(SRCS:.cpp=.o)
+SRC_DIR		:=	./srcs/
+INC_DIR		:=	./includes/
+BIN_DIR		:=	./bin/
+OBJS 		:=	$(addprefix $(SRC_DIR), $(SRC:.cpp=.o))
+OBJS 		:=	$(addprefix $(BIN_DIR), $(SRC:.cpp=.o))
 DEPS		:=	$(OBJS:.o=.d)
 
 ########################################################################################
@@ -52,20 +53,23 @@ WHITE 		:=	\033[0;0m
 
 all: $(NAME)
 
-$(NAME): $(OBJS)
+$(NAME): $(BIN_DIR) $(OBJS)
 	@$(COMP) $(CFLAGS) $(OBJS) -o $@
 	@echo "$(BLUE_BOLD)$(NAME) compilation: $(GREEN)OK$(WHITE)"
 
+$(BIN_DIR):
+	@mkdir $(BIN_DIR)
+
 -include $(DEPS)
-%.o: %.cpp
-	@$(COMP) $(CFLAGS) -I $(INC_PATH) -c $< -o $@
+$(OBJS): $(BIN_DIR)%.o: $(SRC_DIR)%.cpp
+	@$(COMP) $(CFLAGS) -I $(INC_DIR) -c $< -o $@
 
 clean:
-	@rm -f $(OBJS) $(DEPS)
+	@rm -rf $(BIN_DIR)
 	@echo "$(RED_BOLD)$(NAME) clean: $(GREEN)OK$(WHITE)"
 
 fclean:
-	@rm -f $(OBJS) $(DEPS) $(NAME)
+	@rm -rf $(BIN_DIR) $(NAME)
 	@echo "$(RED_BOLD)$(NAME) fclean: $(GREEN)OK$(WHITE)"
 
 re: fclean all
